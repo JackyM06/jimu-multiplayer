@@ -1,0 +1,15 @@
+{
+  "name": "jimu-multiplayer",
+  "version": "0.0.0",
+  "description": "jimu协同编辑器原型",
+  "main": "index.js",
+  "scripts": {
+    "bootstrap": "pnpm i",
+    "serve": "pnpm run --filter jimu-server serve",
+    "serve:stun": "pnpm run --filter jimu-stun-server serve",
+    "serve:signaling": "pnpm run --filter jimu-signaling-server start:dev",
+    "serve:editor": "pnpm run --filter jimu-editor dev"
+  },
+  "author": "maojiankai",
+  "license": "ISC"
+}

@@ -1,0 +1,26 @@
+# Project files
+node_modules/
+dist/
+/packages/jimu-cli-sfc-parsing-tool/lib/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+packages/**/*.js
+!iconfont.js
+packages/**/*.map
+package-lock.json
+!*.config.js
+!.*.js
+!gulpfile.js
+
+# System files
+.DS_Store
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
