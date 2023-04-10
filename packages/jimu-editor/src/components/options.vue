@@ -6,6 +6,11 @@ import { ServiceConnect } from '@jimu/editor/src/models/service'
 
 <template>
   <div class="card">
+    <div>
+      <span class="name">当前用户: {{ ServiceConnect.username }}</span>
+      <span class="total">连接数: {{ ServiceConnect.userTotals }}</span>
+    </div>
+
     <button class="connect" type="button" v-if="!ServiceConnect.connected" @click="ServiceConnect.connect">Connect</button>
     <button type="button" v-else @click="ServiceConnect.disconnect">Disconnect</button>
 
@@ -15,8 +20,13 @@ import { ServiceConnect } from '@jimu/editor/src/models/service'
 <style lang="less" scoped>
 .card {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     padding: 50px;
+
+    .name {
+        margin-right: 30px;
+    }
 }
 
 button {

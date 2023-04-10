@@ -7,7 +7,7 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'localhost:8080',
+    origin: 'http://localhost:8080',
   });
   const httpServer = createServer(app.getHttpServer());
   const io = new Server(httpServer, {
