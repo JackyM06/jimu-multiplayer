@@ -12,7 +12,7 @@ export class SignalingController {
   versionCheck(@Query('version') version: string) {
     if (version && version === '5') {
       return {
-        url: 'https://jimu.corp.kuaishou.com/',
+        url: 'https://baidu.com',
         statusCode: 302,
       };
     }

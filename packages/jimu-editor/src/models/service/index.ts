@@ -1,8 +1,11 @@
 import { ref } from 'vue'
+import { ServiceSocket } from './socket'
 
 export class ServiceConnect {
     private static connected_ref = ref(false);
     private static username_ref = ref('not connect');
+
+    public static socket = new ServiceSocket();
 
     public static get connected() {
         return this.connected_ref.value;
@@ -21,9 +24,11 @@ export class ServiceConnect {
     }
 
     public static async connect() {
+        await this.socket.connect();
         this.connected = true;
     }
     public static async disconnect() {
+        await this.socket.disconnect();
         this.connected = false;
     }
 }
