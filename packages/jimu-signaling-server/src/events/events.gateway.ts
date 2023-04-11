@@ -7,8 +7,11 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 
+import { EventsService } from './events.service';
+
 import { Socket } from 'socket.io';
-import { getUuid, sleep } from 'src/utils';
+import { ServerSubscriptionType } from 'src/config/events';
+import { sleep } from 'src/utils';
 
 @WebSocketGateway(6001, {
   transports: ['polling', 'websocket'],
@@ -18,40 +21,35 @@ import { getUuid, sleep } from 'src/utils';
 export class EventsGateway {
   @WebSocketServer() server: Socket;
 
-  private clients: Socket[] = [];
+  constructor(private readonly eventsService: EventsService) {}
 
   async handleConnection(client: Socket) {
-    this.clients.push(client);
     await sleep(300);
-    client.emit('joined', {
-      uuid: getUuid(),
-    });
-
-    client.emit('userRefresh', {
-      total: this.clients.length,
-    });
-
-    client.broadcast.emit('userRefresh', {
-      total: this.clients.length,
-    });
+    this.eventsService.joined(client);
+    this.eventsService.userRefresh(this.server);
   }
 
   async handleDisconnect(client: Socket) {
-    this.clients = this.clients.filter((e) => e !== client);
     await sleep(300);
-
-    client.broadcast.emit('userRefresh', {
-      total: this.clients.length,
-    });
+    this.eventsService.unjoined(client);
+    this.eventsService.userRefresh(this.server);
   }
 
-  @SubscribeMessage('offer')
-  offer(@MessageBody() offerSdp: any, @ConnectedSocket() client: Socket) {
-    client.broadcast.emit('offer', offerSdp);
+  @SubscribeMessage(ServerSubscriptionType.RELAY_OFFER)
+  relayOffer(@MessageBody() offerSdp: any, @ConnectedSocket() client: Socket) {
+    this.eventsService.relayOffer(client, offerSdp);
   }
 
-  @SubscribeMessage('answer')
-  answer(@MessageBody() answerSdp: any, @ConnectedSocket() client: Socket) {
-    client.broadcast.emit('answer', answerSdp);
+  @SubscribeMessage(ServerSubscriptionType.RELAY_ANSWER)
+  relayAnswer(
+    @MessageBody() answerSdp: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    this.eventsService.relayAnswer(client, answerSdp);
+  }
+
+  @SubscribeMessage(ServerSubscriptionType.SET_ACTIVE_EID)
+  setActiveEid(@MessageBody() eid: string, @ConnectedSocket() client: Socket) {
+    this.eventsService.setActiveEid(client, eid);
   }
 }

@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import Options from './components/options.vue'
+import Warper from './components/warper.vue'
 </script>
 
 <template>
   <div>
     <Options/>
+  </div>
+  <div>
+    <Warper/>
   </div>
 </template>
 

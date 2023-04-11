@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { ServiceConnect } from '@jimu/editor/src/models/service'
+import { computed, onUnmounted, ref } from 'vue'
+import { ServiceConnect } from '@multiplayer/jimu-editor/src/models/service'
+
+onUnmounted(() => {
+  ServiceConnect.disconnect()
+})
 
 </script>
 

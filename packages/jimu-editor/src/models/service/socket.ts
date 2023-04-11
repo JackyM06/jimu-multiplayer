@@ -1,3 +1,4 @@
+import { ServerEmitType, ServerSubscriptionType } from "@multiplayer/jimu-signaling-server/src/config/events";
 import { io, ManagerOptions, Socket, SocketOptions } from "socket.io-client";
 
 export class ServiceSocket {
@@ -68,12 +69,12 @@ export class ServiceSocket {
         this.socket.send(message, data);
     }
 
-    public async emit<T>(event: string, data?:T) {
+    public async emit<T>(event: ServerSubscriptionType, data?:T) {
         await this.checkConnect();
         this.socket.emit(event, data)
     }
 
-    public addEventListener(event: string, listener: (event: any) => void) {
+    public addEventListener(event: ServerEmitType, listener: (event: any) => void) {
         this.socket.on(event, listener)
     }
 }

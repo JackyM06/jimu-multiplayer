@@ -17,7 +17,8 @@ export class Atom {
     }
 
     public static setActiveElement(eid: string): void {
-
+        this.currentEid = eid;
+        console.log('currentEid: ' + this.currentEid)
     }
 
     public static removeElement(eid: string): void {

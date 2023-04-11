@@ -1,5 +1,5 @@
 {
-    "name": "jimu-multiplayer-worker",
+    "name": "@multiplayer/jimu-multiplayer-worker",
     "version": "0.0.3",
     "main": "src/run-render.ts",
     "dependencies": {

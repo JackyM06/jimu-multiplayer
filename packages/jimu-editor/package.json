@@ -1,15 +1,16 @@
 {
-  "name": "@jimu/editor",
+  "name": "@multiplayer/jimu-editor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "serve": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@jimu/editor": "link:",
+    "@multiplayer/jimu-editor": "link:",
+    "@multiplayer/jimu-signaling-server": "*",
     "socket.io-client": "^4.6.1",
     "vue": "^3.2.47"
   },

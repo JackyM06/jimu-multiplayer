@@ -4,11 +4,16 @@
   "description": "jimu协同编辑器原型",
   "main": "index.js",
   "scripts": {
-    "bootstrap": "pnpm i",
+    "bootstrap": "pnpm recursive install",
     "serve": "pnpm run --filter jimu-server serve",
     "serve:stun": "pnpm run --filter jimu-stun-server serve",
     "serve:signaling": "pnpm run --filter jimu-signaling-server start:dev",
     "serve:editor": "pnpm run --filter jimu-editor dev"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=6"
   },
   "author": "maojiankai",
   "license": "ISC"
