@@ -27,6 +27,9 @@ export class MultiPlayerCore {
     private static multiWatchers:(() => void)[] = []
     
     public static selectedElement() {
+        if(!ServiceConnect.connected) {
+            return;
+        }
         ServiceConnect.socket.emit(ServerSubscriptionType.SET_ACTIVE_EID, Atom.currentEid)
     }
 
@@ -66,6 +69,9 @@ export class MultiPlayerCore {
     }
 
     public static realEmitNotDebounced() {
+        if(!ServiceConnect.connected) {
+            return;
+        }
         ServiceConnect.socket.emit(ServerSubscriptionType.SET_ELEMENT_PROP, Object.values(MultiPlayerCore.elementPropsWaitMap))
         MultiPlayerCore.elementPropsWaitMap = {};
     }
