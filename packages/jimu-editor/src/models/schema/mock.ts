@@ -2,6 +2,10 @@ export default [
     {
       eid: 'app',
       parent: '',
+      manifest: {
+        name: 'app',
+        cname: '基础容器'
+      },
       props: {
         visible: {
           type: 'Boolean',
@@ -27,6 +31,10 @@ export default [
     {
       eid: '6f043f16[system-block]',
       parent: '6f043f12[system-container]',
+      manifest: {
+        name: 'system-block',
+        cname: '空白楼层'
+      },
       props: {
         visible: {
           type: 'Boolean',
@@ -36,9 +44,15 @@ export default [
             value: true,
           },
         },
-        style: {
-          height: 150
+        'styles.default.height': {
+          type: 'Number',
+          default: 300,
+          value: {
+            type: 'STATIC',
+            value: 150,
+          },
         },
+        
         children: {
           type: 'Array',
           value: {
@@ -59,6 +73,10 @@ export default [
     {
       eid: '6f05a132[common-button]',
       parent: '6f043f16[system-block]',
+      manifest: {
+        name: 'common-button',
+        cname: '按钮'
+      },
       props: {
         url: {
           type: 'String',
@@ -67,10 +85,20 @@ export default [
             value: '',
           },
         },
-        style: {
-          left: 30,
-          top: 50,
-        }
+        'styles.default.left': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 30,
+          },
+        },
+        'styles.default.top': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 50,
+          },
+        },
       },
       editorData: {
         name: '按钮',
@@ -79,6 +107,10 @@ export default [
     {
       eid: '6f05eef5[common-button]',
       parent: '6f043f16[system-block]',
+      manifest: {
+        name: 'common-button',
+        cname: '按钮'
+      },
       props: {
         url: {
           type: 'String',
@@ -87,10 +119,20 @@ export default [
             value: '',
           },
         },
-        style: {
-          left: 130,
-          top: 50,
-        }
+        'styles.default.left': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 130,
+          },
+        },
+        'styles.default.top': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 50,
+          },
+        },
       },
       editorData: {
         name: '按钮_1',
@@ -99,6 +141,10 @@ export default [
     {
       eid: '6f05f4ac[common-button]',
       parent: '6f043f16[system-block]',
+      manifest: {
+        name: 'common-button',
+        cname: '按钮'
+      },
       props: {
         url: {
           type: 'String',
@@ -107,10 +153,20 @@ export default [
             value: '',
           },
         },
-        style: {
-          left: 230,
-          top: 50,
-        }
+        'styles.default.left': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 230,
+          },
+        },
+        'styles.default.top': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 50,
+          },
+        },
       },
       editorData: {
         name: '按钮_2',
@@ -119,6 +175,10 @@ export default [
     {
       eid: '6f0605e9[system-block]',
       parent: '6f043f12[system-container]',
+      manifest: {
+        name: 'system-block',
+        cname: '空白楼层'
+      },
       props: {
         visible: {
           type: 'Boolean',
@@ -128,8 +188,12 @@ export default [
             value: true,
           },
         },
-        style: {
-          height: 150
+        'styles.default.height': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 150,
+          },
         },
         children: {
           type: 'Array',
@@ -146,6 +210,10 @@ export default [
     {
       eid: '6f062257[common-button]',
       parent: '6f0605e9[system-block]',
+      manifest: {
+        name: 'common-button',
+        cname: '按钮'
+      },
       props: {
         url: {
           type: 'String',
@@ -154,10 +222,20 @@ export default [
             value: '',
           },
         },
-        style: {
-          left: 130,
-          top: 50,
-        }
+        'styles.default.left': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 130,
+          },
+        },
+        'styles.default.top': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 50,
+          },
+        },
       },
       editorData: {
         name: '按钮_3',
@@ -166,6 +244,10 @@ export default [
     {
       eid: '6f06253e[common-button]',
       parent: '6f0605e9[system-block]',
+      manifest: {
+        name: 'common-button',
+        cname: '按钮'
+      },
       props: {
         url: {
           type: 'String',
@@ -174,10 +256,20 @@ export default [
             value: '',
           },
         },
-        style: {
-          left: 230,
-          top: 50,
-        }
+        'styles.default.left': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 230,
+          },
+        },
+        'styles.default.top': {
+          type: 'Number',
+          value: {
+            type: 'STATIC',
+            value: 50,
+          },
+        },
       },
       editorData: {
         name: '按钮_4',

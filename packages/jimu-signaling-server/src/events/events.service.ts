@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { ServerEmitType } from 'src/config/events';
 import { getUuid } from 'src/utils';
-import { IUserInfo, IUserOverview, IEditorInfo, IPlayerInfo } from './types';
+import {
+  IUserInfo,
+  IUserOverview,
+  IEditorInfo,
+  IPlayerInfo,
+  IElementPropInfo,
+} from './types';
 import { get, set } from 'lodash';
 
 @Injectable()
@@ -66,5 +72,9 @@ export class EventsService {
       ServerEmitType.PLAYER_REFRESH,
       this.playerInfo[client.id],
     );
+  }
+
+  setElementProp(client: Socket, propInfos: IElementPropInfo[]) {
+    client.broadcast.emit(ServerEmitType.ELEMENT_PROP_CHANGE, propInfos);
   }
 }

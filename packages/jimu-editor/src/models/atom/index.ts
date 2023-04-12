@@ -1,9 +1,7 @@
-/**
- * 当前Schema
- * @export
- * @class Atom
- */
 import { ref } from 'vue'
+import { get, set } from 'lodash-es'
+import { SchemaModel } from '../schema'
+import { MultiPlayerCore } from '../crdt';
 
 export class Atom {
     private static currentEid_ref = ref('app');
@@ -18,7 +16,6 @@ export class Atom {
 
     public static setActiveElement(eid: string): void {
         this.currentEid = eid;
-        console.log('currentEid: ' + this.currentEid)
     }
 
     public static removeElement(eid: string): void {
@@ -29,11 +26,18 @@ export class Atom {
 
     }
 
-    public static setElementProp(path: string, value: any) {
+    public static setElementProp(path: string, value: any, eid = this.currentEid, canBroadcast = true): void {
+        canBroadcast && MultiPlayerCore.changeElementProps(eid, path, value)
+        return SchemaModel.setModelProp(eid, path, value);
 
     }
 
-    public static getElementProp(path: string) {
-        
+    public static getElementProp(path: string, eid = this.currentEid) {
+        return SchemaModel.getModelProp(eid, path);
     }
+
+    public static getElementManifest(eid = this.currentEid) {
+        return SchemaModel.getModelManifest(eid);
+    }
+
 }

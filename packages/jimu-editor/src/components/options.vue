@@ -27,6 +27,7 @@ onUnmounted(() => {
     justify-content: space-between;
     align-items: center;
     padding: 50px;
+    border-bottom: 2px solid #f8f1e0;
 
     .name {
         margin-right: 30px;

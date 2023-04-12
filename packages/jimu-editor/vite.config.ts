@@ -5,6 +5,9 @@ import { join as pathJoin } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  esbuild: {
+    loader: "tsx",
+  },
   server: {
     port: 8080,
   },

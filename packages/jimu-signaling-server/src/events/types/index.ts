@@ -14,3 +14,9 @@ export interface IPlayerInfo {
   userInfo: IUserInfo;
   editorInfo: IEditorInfo;
 }
+
+export interface IElementPropInfo {
+  eid: string;
+  path: string;
+  value: unknown;
+}

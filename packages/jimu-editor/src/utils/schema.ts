@@ -1,4 +1,12 @@
-export function styleHelper(styles?: Record<string, number | string>) {
+export function styleHelper(props: Record<string, any>) {
+
+    const styles = Object.keys(props).reduce((res, cur) => {
+        if(cur.startsWith('styles')) {
+            res[cur.replace('styles.default.', '')] = props[cur].value.value ||  props[cur].value.default;
+        }
+        return res;
+    }, {} as any)
+
     if(!styles) {
         return {};
     }

@@ -12,6 +12,7 @@ import { EventsService } from './events.service';
 import { Socket } from 'socket.io';
 import { ServerSubscriptionType } from 'src/config/events';
 import { sleep } from 'src/utils';
+import { IElementPropInfo } from './types';
 
 @WebSocketGateway(6001, {
   transports: ['polling', 'websocket'],
@@ -51,5 +52,13 @@ export class EventsGateway {
   @SubscribeMessage(ServerSubscriptionType.SET_ACTIVE_EID)
   setActiveEid(@MessageBody() eid: string, @ConnectedSocket() client: Socket) {
     this.eventsService.setActiveEid(client, eid);
+  }
+
+  @SubscribeMessage(ServerSubscriptionType.SET_ELEMENT_PROP)
+  setElementProp(
+    @MessageBody() propInfos: IElementPropInfo[],
+    @ConnectedSocket() client: Socket,
+  ) {
+    this.eventsService.setElementProp(client, propInfos);
   }
 }
