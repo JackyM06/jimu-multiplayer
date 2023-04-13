@@ -4,6 +4,7 @@ import { MultiPlayerCore } from "../crdt";
 import { SchemaModel } from ".";
 import { stringToColor, styleHelper } from "@editor/utils/schema";
 import { ElementDraggerManager } from "../dragger";
+import { LayoutType } from "@editor/const";
 
 export function onSelected(eid: string, e: MouseEvent,) {
     const otherSelected = MultiPlayerCore.selectedEidMap.value[eid];
@@ -16,7 +17,7 @@ export function onSelected(eid: string, e: MouseEvent,) {
 export const schemaView = computed(() => {
     const getVNode = (eid: string):ReturnType<typeof h> => {
         const item = SchemaModel.getModel(eid);
-        const isBlockNode = !!item?.props.children
+        const isBlockNode = SchemaModel.getModelProp(eid, 'layout') === LayoutType.BLOCK
         const selected = eid === Atom.currentEid;
         const otherSelected = MultiPlayerCore.selectedEidMap.value[eid];
         return createVNode(

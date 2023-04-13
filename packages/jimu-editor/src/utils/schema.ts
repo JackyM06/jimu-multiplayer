@@ -32,3 +32,11 @@ export function stringToColor(str: string) {
     }
     return color;
   }
+
+
+let uuid = 1;
+
+export function getUuid(name: string) {
+  uuid += 1;
+  return (Date.now() + uuid).toString(16).substring(3) + `[${name}]`;
+}

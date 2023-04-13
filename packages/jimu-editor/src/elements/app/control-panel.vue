@@ -2,7 +2,7 @@
 import { 
     ControlField,
     ControlFieldCheckbox
-} from '@editor/element-control-panel/control'
+} from '@editor/control-core'
 </script>
 
 <template>

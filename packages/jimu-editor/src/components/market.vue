@@ -1,21 +1,22 @@
 <script setup lang='ts'>
+import { ElementStore } from '@editor/elements'
+import { Atom } from '@editor/models/atom'
 
-import { SchemaModel } from '@editor/models/schema';
-import { ref, onMounted, nextTick } from 'vue';
+const allElements = Object.values(ElementStore)
+.map(e => e.manifest)
+.filter(e => e.name !== 'app');
 
-const allElements = SchemaModel.getAllElementManifest().filter(e => e.name !== 'app');
-
-
-function addElement() {
-    // 添加组件
-}
 
 </script>
 
 <template>
     <div class="market">
-        <div class="item" @click="addElement" v-for="manifest in allElements" :key="manifest.name">
-            {{ manifest.cname }}
+        <div 
+            class="item" 
+            @click="Atom.createModel(name, Atom.getLastBlockEid())" 
+            v-for="{name, cname} in allElements" :key="name"
+        >
+            {{ cname }}
         </div>
     </div>
 </template>

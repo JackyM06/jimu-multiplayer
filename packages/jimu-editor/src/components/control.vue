@@ -1,9 +1,10 @@
 <script setup lang='ts'>
 
 import { Atom } from '@editor/models/atom';
-import App from '@editor/element-control-panel/app.vue';
-import SystemBlock from '@editor/element-control-panel/system-block.vue';
-import CommonButton from '@editor/element-control-panel/common-button.vue';
+import App from '@editor/elements/app/control-panel.vue';
+import SystemBlock from '@editor/elements/system-block/control-panel.vue';
+import CommonButton from '@editor/elements/common-button/control-panel.vue';
+
 import { computed } from 'vue';
 
 const manifest = computed(() => Atom.getElementManifest())

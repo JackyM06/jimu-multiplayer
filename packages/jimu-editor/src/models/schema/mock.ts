@@ -7,6 +7,11 @@ export default [
         cname: '基础容器'
       },
       props: {
+        layout: {
+          value: {
+            value: 'BLOCK',
+          }
+        },
         visible: {
           type: 'Boolean',
           default: true,
@@ -24,7 +29,6 @@ export default [
         },
       },
       editorData: {
-        canBeRemoved: false,
         name: '基础容器',
       },
     },
@@ -36,7 +40,11 @@ export default [
         cname: '空白楼层'
       },
       props: {
-        visible: {
+        layout: {
+          value: {
+            value: 'BLOCK',
+          }
+        },        visible: {
           type: 'Boolean',
           default: true,
           value: {
@@ -180,6 +188,11 @@ export default [
         cname: '空白楼层'
       },
       props: {
+        layout: {
+          value: {
+            value: 'BLOCK',
+          }
+        },
         visible: {
           type: 'Boolean',
           default: true,
