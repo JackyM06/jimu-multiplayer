@@ -6,6 +6,7 @@ import { ElementStore } from '@editor/elements'
 import { getUuid } from '@editor/utils/schema';
 import { ISchemaItem } from '@editor/types';
 import { LayoutType } from '@editor/const';
+import { ElementDraggerManager } from '../dragger';
 
 export class Atom {
     private static currentEid_ref = ref('app');
@@ -30,21 +31,23 @@ export class Atom {
         if(!ElementStore[name]) {
             return;
         }
-        const { manifest, props } = ElementStore[name];
+        const { manifest, config } = ElementStore[name];
         const eid = getUuid(name);
         const schema: ISchemaItem = {
             manifest,
             editorData: {
-                name: manifest.name,
+                name: manifest.cname,
             },
             parent: parentEid,
             eid,
-            props: Object.keys(props).reduce((res, cur) => {
-                set(res, `${cur}.value.value`, props[cur]);
-                return res;
-            }, {}) as any
+            props: {} as any
         }
+
         SchemaModel.addModel(schema);
+
+        Object.keys(config.props).forEach(key => {
+            this.setElementProp(key, config.props[key], eid);
+        })
         this.setModelParent(eid, parentEid);
     }
 
@@ -58,12 +61,21 @@ export class Atom {
 
         model.parent = parent;
         const parentChild = SchemaModel.getModelProp(parent, 'children') || [];
-        this.setElementProp(parent, 'children', parentChild.push(eid));
+        this.setElementProp('children', [
+            ...parentChild,
+            eid,
+        ], parent);
+
+        ElementDraggerManager.initialize();
+        
     }
 
     public static getLastBlockEid(eid = this.currentEid): string {
         const layout = this.getElementProp('layout', eid);
         if(layout === LayoutType.BLOCK) {
+            if(eid === 'app') {
+                return this.getElementProp('children', 'app')[0]
+            }
             return eid;
         }
         return this.getLastBlockEid(SchemaModel.getModelParent(eid))

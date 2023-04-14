@@ -21,7 +21,7 @@ export class SchemaModel {
 
     public static getModelParent(eid: string) {
         const model = this.getModel(eid);
-        return model?.parent;
+        return model?.parent || 'app';
     }
 
     public static getModel(eid: string ) {
@@ -35,6 +35,12 @@ export class SchemaModel {
 
     public static setModelProp(eid: string, path: string, value: any) {
         const model = this.getModel(eid);
+        if(!model) {
+            return;
+        }
+        if(!(model.props as any)[path]) {
+            (model.props as any)[path] = {}
+        }
         set((model?.props as any)[path], 'value.value', value)
     }
 

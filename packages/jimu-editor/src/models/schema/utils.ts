@@ -34,6 +34,7 @@ export const schemaView = computed(() => {
                     ...otherSelected ? {'border-color': stringToColor(otherSelected)} : {}
                 },
                 'data-eid': eid,
+                key: eid,
                 id: `E${eid}`,
                 onClick: onSelected.bind(null, eid),
                 ...(!isBlockNode ? {

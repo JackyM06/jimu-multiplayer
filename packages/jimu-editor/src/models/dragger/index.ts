@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { Atom } from '../atom';
+import { LayoutType } from '@editor/const';
 
 export class ElementDraggerManager {
 
@@ -20,9 +21,9 @@ export class ElementDraggerManager {
     
     public static onMouseDown(eid: string, event: MouseEvent) {
         event.stopPropagation();
-        if(eid !== Atom.currentEid) {
+        if(Atom.getElementProp('layout', eid) === LayoutType.BLOCK) {
             return;
-        }
+        }  
         this.isDragging = true;
 
         const y = Atom.getElementProp('styles.default.top')
@@ -37,22 +38,34 @@ export class ElementDraggerManager {
 
     public static onMouseUp(eid: string, event: MouseEvent) {
         event.stopPropagation();
-        
-        this.isDragging = false;
-
-        this.elementOffset.x = 0;
-        this.elementOffset.y = 0;
+        this.initialize();
     }
 
     public static onMouseMove(eid: string, event: MouseEvent) {
         event.stopPropagation();
+        if(eid !== Atom.currentEid) {
+            return;
+        }
+        if(Atom.getElementProp('layout', eid) === LayoutType.BLOCK) {
+            return;
+        }  
         if(!this.isDragging) {
             return;
         }        
+
+        // TODO 添加子组件拖拽异常
         const y = event.clientY - this.elementOffset.y;
         const x = event.clientX - this.elementOffset.x;
 
-        Atom.setElementProp('styles.default.top', y);
-        Atom.setElementProp('styles.default.left', x);
+        Atom.setElementProp('styles.default.top', y, eid);
+        Atom.setElementProp('styles.default.left', x, eid);
+    }
+
+    public static initialize() {
+        this.isDragging = false;
+        this.elementOffset = {
+            x: 0,
+            y: 0,
+        }
     }
 }
