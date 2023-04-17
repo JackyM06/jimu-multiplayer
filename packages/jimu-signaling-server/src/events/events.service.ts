@@ -22,6 +22,7 @@ export class EventsService {
   get userOverview(): IUserOverview {
     return {
       total: this.clients.length,
+      uuids: Object.values(this.playerInfo).map((e) => e.userInfo.uuid),
     };
   }
 

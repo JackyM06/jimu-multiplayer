@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref } from 'vue'
 import { ServiceConnect } from '@multiplayer/jimu-editor/src/models/service'
+import { Voice } from '@multiplayer/jimu-editor/src/models/voice'
 
 onUnmounted(() => {
   ServiceConnect.disconnect()
 })
+
+function refresh() {
+  location.reload()
+}
 
 </script>
 
@@ -15,9 +20,19 @@ onUnmounted(() => {
       <span class="total">连接数: {{ ServiceConnect.userTotals }}</span>
     </div>
 
-    <button class="connect" type="button" v-if="!ServiceConnect.connected" @click="ServiceConnect.connect">Connect</button>
-    <button type="button" v-else @click="ServiceConnect.disconnect">Disconnect</button>
-
+    <div>
+      <template v-if="ServiceConnect.connected">
+        <button class="connect" type="button" v-if="Voice.opened" @click="Voice.close">Voice: ON</button>
+        <button type="button"  v-else @click="Voice.open">Voice: OFF</button>
+      </template>
+      
+      <button class="connect" type="button" v-if="!ServiceConnect.connected" @click="ServiceConnect.connect">Connect</button>
+      
+      <button type="button" v-else @click="ServiceConnect.disconnect">Disconnect</button>
+      
+      <button type="button">Save</button>
+      <button type="button" @click="refresh">Refresh</button>
+    </div>
   </div>
 </template>
 
@@ -36,10 +51,7 @@ onUnmounted(() => {
 
 button {
     margin-left: 20px;
-    filter: drop-shadow(0 0 1.5em #646cffaa);
-
-    &.connect {
-        filter: drop-shadow(0 0 1.5em #42b883aa);
-    }
+    color: #fff;
+    background-color: #020202;
 }
 </style>

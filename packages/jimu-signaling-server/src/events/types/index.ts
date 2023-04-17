@@ -1,5 +1,6 @@
 export interface IUserOverview {
   total: number;
+  uuids: string[];
 }
 
 export interface IUserInfo {

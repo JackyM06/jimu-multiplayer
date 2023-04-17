@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { IoAdapter } from '@nestjs/platform-socket.io';
+import { PeerServer } from 'peer';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,3 +21,6 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+// 启用Peer信令服务器
+PeerServer({ port: 9000, path: '/peer' });

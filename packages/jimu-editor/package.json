@@ -13,11 +13,13 @@
     "@multiplayer/jimu-signaling-server": "*",
     "lodash": "4",
     "lodash-es": "^4.17.21",
+    "peerjs": "^1.4.7",
     "socket.io-client": "^4.6.1",
     "vue": "^3.2.47"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.7",
+    "@types/peerjs": "^1.1.0",
     "@types/socket.io-client": "^3.0.0",
     "@vitejs/plugin-vue": "^4.1.0",
     "lodash-decorators": "^6.0.1",

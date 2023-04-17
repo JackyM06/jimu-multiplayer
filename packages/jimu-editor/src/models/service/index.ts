@@ -7,7 +7,8 @@ export class ServiceConnect {
     private static connected_ref = ref(false);
     private static userinfo_ref = ref<Partial<{
         username: string,
-        userTotals: number
+        userTotals: number,
+        onlineUsers: string[],
     }>>({});
 
     public static socket = new ServiceSocket();
@@ -26,6 +27,14 @@ export class ServiceConnect {
 
     public static set username(val) {
         this.userinfo_ref.value.username = val;
+    }
+
+    public static get onlineUsers() {
+        return this.userinfo_ref.value.onlineUsers || [];
+    }
+
+    public static set onlineUsers(val) {
+        this.userinfo_ref.value.onlineUsers = val;
     }
 
     public static get userTotals() {
@@ -60,7 +69,8 @@ ServiceConnect.socket.addEventListener(ServerEmitType.JOINED, (data: IUserInfo) 
 })
 
 ServiceConnect.socket.addEventListener(ServerEmitType.USER_REFRESH, (data: IUserOverview) => {
-    const { total } = data;
+    const { total, uuids } = data;
     ServiceConnect.userTotals = total;
+    ServiceConnect.onlineUsers = uuids;
     MultiPlayerCore.selectedElement()
 })

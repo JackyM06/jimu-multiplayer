@@ -19,7 +19,7 @@ export const schemaView = computed(() => {
         const item = SchemaModel.getModel(eid);
         const isBlockNode = SchemaModel.getModelProp(eid, 'layout') === LayoutType.BLOCK
         const selected = eid === Atom.currentEid;
-        const otherSelected = MultiPlayerCore.selectedEidMap.value[eid];
+        const otherSelected = MultiPlayerCore.selectedEidMap.value[eid] || '';
         return createVNode(
             'div', 
             {
@@ -45,11 +45,13 @@ export const schemaView = computed(() => {
 
             },
             [
-                ...otherSelected ? [createVNode('span', {
+                ...(otherSelected ? [createVNode('span', {
                     style: { background: stringToColor(otherSelected) },
                     class: 'player-hit',
-                }, otherSelected),] : [],
-                createVNode('span', {class: 'hit'}, item?.editorData.name),
+                    key: `player`,
+                    if: otherSelected,
+                }, otherSelected),] : []),
+                createVNode('span', {class: 'hit', key: `hit`}, item?.editorData.name),
                 item?.props.children?.value.value.map(e => getVNode(e))
             ]
         )
