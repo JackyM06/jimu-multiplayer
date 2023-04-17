@@ -5,7 +5,9 @@ export class ServiceSocket {
     public socket: Socket;
 
     constructor() {
-        this.socket = io(`${location.protocol}//${location.hostname}:6001`, {
+        let url = `${location.protocol}//${location.hostname}`
+        location.hostname === 'localhost' && (url += `:6001`);
+        this.socket = io(url, {
             path:'/signaling-socket/',
             autoConnect: false,
         });

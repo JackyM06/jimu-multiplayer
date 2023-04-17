@@ -29,7 +29,7 @@ export class Voice {
     public static open() {
         this.peer = new Peer(ServiceConnect.username, {
             host: location.hostname,
-            port: 9000,
+            ...(location.hostname === 'localhost' ? {port: 9000} : {}),
             path: '/peer'
         });
         this.peer.on('open', (e) => {

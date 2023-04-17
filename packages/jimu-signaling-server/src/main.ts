@@ -8,7 +8,7 @@ import { PeerServer } from 'peer';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:8080',
+    origin: '*',
   });
   const httpServer = createServer(app.getHttpServer());
   const io = new Server(httpServer, {
