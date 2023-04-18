@@ -45,6 +45,7 @@ export class Voice {
         this.peer.on('disconnected', (e) => {
             unjoinedAudio.play();
             this.online.value = false;
+            
         })
 
     }
@@ -56,7 +57,7 @@ export class Voice {
          this.otherIDs.map(e => {
             return this.peer.connect(e)
         })
-        joinedAudio.play()
+        joinedAudio.play();
     }
 
     private static async setAudioSteam() {

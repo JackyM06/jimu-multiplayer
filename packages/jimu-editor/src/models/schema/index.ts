@@ -30,6 +30,9 @@ export class SchemaModel {
 
     public static getModelProp(eid: string, path: string) {
         const model = this.getModel(eid);
+        if(!model) {
+            return;
+        }
         return get((model?.props as any)[path], 'value.value')
     }
 
