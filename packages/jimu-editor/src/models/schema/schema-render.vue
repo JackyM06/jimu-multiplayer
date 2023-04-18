@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { SchemaModel } from '.';
 import { LayoutType } from '@editor/const';
 import { Atom } from '../atom';
@@ -15,6 +15,8 @@ const props = withDefaults(
         eid: 'app',
     },
 );
+
+const schemaEl = ref<HTMLDivElement>();
 
 const model = computed(() => {
     return SchemaModel.getModel(props.eid);
@@ -39,7 +41,8 @@ const children = computed(() => {
 function onClick(e: MouseEvent) {
     const otherSelected = MultiPlayerCore.selectedEidMap.value[props.eid];
     if(!otherSelected) {
-        Atom.setActiveElement(props.eid)
+        Atom.setActiveElement(props.eid);
+        schemaEl.value?.focus();
     } 
 }
 
@@ -63,8 +66,6 @@ function onMouseup(e: MouseEvent) {
     }
     ElementDraggerManager.onMouseUp(props.eid, e);
 }
-
-
 </script>
 
 <template>
@@ -86,6 +87,9 @@ function onMouseup(e: MouseEvent) {
         @mouseup="onMouseup"
         @mousedown="onMousedown"
         @mousemove="onMousemove"
+        @keydown.backspace.stop="Atom.removeElement(eid)"
+        tabindex="0"
+        ref="schemaEl"
     >
         <span 
             v-if="otherSelected"

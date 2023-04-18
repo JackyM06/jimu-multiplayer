@@ -1,9 +1,10 @@
 import { watch, ref, computed } from 'vue'
 import {ServiceConnect} from '@editor/models/service'
-import { ServerEmitType, ServerSubscriptionType } from '@multiplayer/jimu-signaling-server/src/config/events'
+import { ElementOperationType, ServerEmitType, ServerSubscriptionType } from '@multiplayer/jimu-signaling-server/src/config/events'
 import { Atom } from '../atom'
-import { IElementPropInfo, IPlayerInfo } from '@multiplayer/jimu-signaling-server/src/events/types'
+import { IElementCreate, IElementDelete, IElementUnionOperation, IElementUpdate, IOperationInfo, IPlayerInfo } from '@multiplayer/jimu-signaling-server/src/events/types'
 import { debounce } from 'lodash-es'
+import { LoggerManager } from '../logger';
 
 const realSendElementPropUpdate = debounce(() => {
     MultiPlayerCore.realEmitNotDebounced()
@@ -12,7 +13,7 @@ const realSendElementPropUpdate = debounce(() => {
 export class MultiPlayerCore {
     public static otherPlayer = ref<Record<string, IPlayerInfo>>({})
 
-    public static elementPropsWaitMap: Record<string, IElementPropInfo> = {};
+    public static elementOperationWaitMap: Record<string, IElementUnionOperation> = {};
 
     public static selectedEidMap = computed(() => {
         return Object.keys(this.otherPlayer.value).reduce((res, cur) => {
@@ -33,15 +34,20 @@ export class MultiPlayerCore {
         ServiceConnect.socket.emit(ServerSubscriptionType.SET_ACTIVE_EID, Atom.currentEid)
     }
 
-    public static changeElementProps(eid: string, path: string, value: any) {
-        this.elementPropsWaitMap[`${eid}-${path}`] = { eid, path, value };
+    public static changeElementOperation(operation: IElementUnionOperation) {
+        const { uuid, type, eid, path } = operation;
+        if(uuid !== ServiceConnect.username) {
+            return;
+        }
+        LoggerManager.appendLogger(operation)
+        this.elementOperationWaitMap[`${type}-${eid}-${path}`] = operation;
         realSendElementPropUpdate();
     }
 
     public static onConnect() {
         ServiceConnect.socket.addEventListener(ServerEmitType.PLAYER_REFRESH, MultiPlayerCore.onOtherPlayerUpdate)
         ServiceConnect.socket.addEventListener(ServerEmitType.PLAYER_UNJOINED, MultiPlayerCore.onOtherPlayerUnjoined)
-        ServiceConnect.socket.addEventListener(ServerEmitType.ELEMENT_PROP_CHANGE, MultiPlayerCore.onElementPropUpdate)
+        ServiceConnect.socket.addEventListener(ServerEmitType.ELEMENT_OPERATION_UPDATE, MultiPlayerCore.onElementOperationUpdate)
         this.multiWatchers.push(
             watch(() => Atom.currentEid, MultiPlayerCore.selectedElement)
         )
@@ -61,19 +67,38 @@ export class MultiPlayerCore {
         Reflect.deleteProperty(MultiPlayerCore.otherPlayer.value, uuid);
     }
 
-    public static onElementPropUpdate(propInfos: IElementPropInfo[]) {
-        propInfos.forEach(propInfo => {
-            const { eid, path, value } = propInfo;
-            Atom.setElementProp(path, value, eid, false);
+    public static onElementOperationUpdate(operations: IElementUnionOperation[]) {
+        operations.forEach(operation => {
+            LoggerManager.appendLogger(operation)
+
+            const { type, uuid } = operation; 
+            switch(type) {
+                case ElementOperationType.CREATE: {
+                    const { schema } = operation;
+                    Atom.loadSchemaItem(schema);
+                    return;
+                };
+                case ElementOperationType.EDIT: {
+                    const { path, value, eid } = operation;
+                    Atom.setElementProp(path || '', value, eid, uuid);
+                    return;
+                }
+                case ElementOperationType.DELETE: {
+                    const { eid } = operation;
+                    Atom.removeElement(eid || '', uuid);
+                    return;
+                };
+            }
         })
     }
+
 
     public static realEmitNotDebounced() {
         if(!ServiceConnect.connected) {
             return;
         }
-        ServiceConnect.socket.emit(ServerSubscriptionType.SET_ELEMENT_PROP, Object.values(MultiPlayerCore.elementPropsWaitMap))
-        MultiPlayerCore.elementPropsWaitMap = {};
+        ServiceConnect.socket.emit(ServerSubscriptionType.SET_ELEMENT_OPERATION, Object.values(MultiPlayerCore.elementOperationWaitMap))
+        MultiPlayerCore.elementOperationWaitMap = {};
     }
 }
 

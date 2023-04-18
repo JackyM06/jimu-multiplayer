@@ -4,7 +4,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
   ConnectedSocket,
-  WsResponse,
 } from '@nestjs/websockets';
 
 import { EventsService } from './events.service';
@@ -12,7 +11,7 @@ import { EventsService } from './events.service';
 import { Socket } from 'socket.io';
 import { ServerSubscriptionType } from 'src/config/events';
 import { sleep } from 'src/utils';
-import { IElementPropInfo } from './types';
+import { IElementUnionOperation, IOperationInfo } from './types';
 
 @WebSocketGateway(6001, {
   transports: ['polling', 'websocket'],
@@ -54,11 +53,11 @@ export class EventsGateway {
     this.eventsService.setActiveEid(client, eid);
   }
 
-  @SubscribeMessage(ServerSubscriptionType.SET_ELEMENT_PROP)
-  setElementProp(
-    @MessageBody() propInfos: IElementPropInfo[],
+  @SubscribeMessage(ServerSubscriptionType.SET_ELEMENT_OPERATION)
+  setElementOperation(
+    @MessageBody() operations: IElementUnionOperation[],
     @ConnectedSocket() client: Socket,
   ) {
-    this.eventsService.setElementProp(client, propInfos);
+    this.eventsService.setElementOperation(client, operations);
   }
 }

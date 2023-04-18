@@ -5,8 +5,10 @@ import { MultiPlayerCore } from '../crdt';
 import { ElementStore } from '@editor/elements'
 import { getUuid } from '@editor/utils/schema';
 import { ISchemaItem } from '@editor/types';
-import { LayoutType } from '@editor/const';
+import { ElementOperationType, LayoutType } from '@editor/const';
 import { ElementDraggerManager } from '../dragger';
+import { ServiceConnect } from '../service';
+
 
 export class Atom {
     private static currentEid_ref = ref('app');
@@ -23,11 +25,37 @@ export class Atom {
         this.currentEid = eid;
     }
 
-    public static removeElement(eid: string): void {
+    public static removeElement(eid: string, username = ServiceConnect.username): void {
+        
+        if(eid === 'app') {
+            return;
+        }
+
+        const children = SchemaModel.getModelProp<string[]>(eid, 'children') || [];
+
+        children.forEach(child => this.removeElement(child))
+        
+        const parent = SchemaModel.getModelParent(eid);
+        const parentChild = SchemaModel.getModelProp<string[]>(parent, 'children') || [];
+        SchemaModel.setModelProp(parent, 'children',  parentChild.filter(e => e !== eid))
+    
+
         SchemaModel.removeModel(eid)
+
+        MultiPlayerCore.changeElementOperation({
+            uuid: username,
+            type: ElementOperationType.DELETE,
+            time: Date.now(),
+            eid,
+        });
     }
 
-    public static createModel(name: string, parentEid: string) {
+    public static loadSchemaItem(item: ISchemaItem): void {
+        SchemaModel.addModel(item);
+        this.setModelParent(item.eid, item.parent)
+    }
+
+    public static createModel(name: string, parentEid: string, username = ServiceConnect.username) {
         if(!ElementStore[name]) {
             return;
         }
@@ -46,9 +74,16 @@ export class Atom {
         SchemaModel.addModel(schema);
 
         Object.keys(config.props).forEach(key => {
-            this.setElementProp(key, config.props[key], eid);
+            this.setElementProp(key, config.props[key], eid, '');
         })
         this.setModelParent(eid, parentEid);
+
+        MultiPlayerCore.changeElementOperation({
+            uuid: username,
+            type: ElementOperationType.CREATE,
+            time: Date.now(),
+            schema: SchemaModel.getModel(eid),
+        });
     }
 
     public static setModelParent(eid: string, parent: string) {
@@ -60,11 +95,11 @@ export class Atom {
         }
 
         model.parent = parent;
-        const parentChild = SchemaModel.getModelProp(parent, 'children') || [];
+        const parentChild = SchemaModel.getModelProp<string[]>(parent, 'children') || [];
         this.setElementProp('children', [
             ...parentChild,
             eid,
-        ], parent);
+        ], parent,'');
 
         ElementDraggerManager.initialize();
         
@@ -74,7 +109,7 @@ export class Atom {
         const layout = this.getElementProp('layout', eid);
         if(layout === LayoutType.BLOCK) {
             if(eid === 'app') {
-                return this.getElementProp('children', 'app')[0]
+                return this.getElementProp<string[]>('children', 'app')[0]
             }
             return eid;
         }
@@ -83,9 +118,16 @@ export class Atom {
     }
 
 
-    public static setElementProp(path: string, value: any, eid = this.currentEid, canBroadcast = true): void {
+    public static setElementProp(path: string, value: any, eid = this.currentEid, username = ServiceConnect.username): void {
         SchemaModel.setModelProp(eid, path, value);
-        canBroadcast && MultiPlayerCore.changeElementProps(eid, path, value)
+        MultiPlayerCore.changeElementOperation({
+            uuid: username,
+            eid,
+            path,
+            value,
+            time: Date.now(),
+            type: ElementOperationType.EDIT
+        });
     }
 
     public static getElementProp(path: string, eid = this.currentEid) {

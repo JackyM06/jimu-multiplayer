@@ -7,7 +7,7 @@ import {
   IUserOverview,
   IEditorInfo,
   IPlayerInfo,
-  IElementPropInfo,
+  IElementUnionOperation,
 } from './types';
 import { get, set } from 'lodash';
 
@@ -75,7 +75,7 @@ export class EventsService {
     );
   }
 
-  setElementProp(client: Socket, propInfos: IElementPropInfo[]) {
-    client.broadcast.emit(ServerEmitType.ELEMENT_PROP_CHANGE, propInfos);
+  setElementOperation(client: Socket, operations: IElementUnionOperation[]) {
+    client.broadcast.emit(ServerEmitType.ELEMENT_OPERATION_UPDATE, operations);
   }
 }

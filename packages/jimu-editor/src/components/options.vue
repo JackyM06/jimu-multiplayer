@@ -2,6 +2,7 @@
 import { computed, onUnmounted, ref } from 'vue'
 import { ServiceConnect } from '@multiplayer/jimu-editor/src/models/service'
 import { Voice } from '@multiplayer/jimu-editor/src/models/voice'
+import { HistoryManager } from '@editor/models/history';
 
 onUnmounted(() => {
   ServiceConnect.disconnect()
@@ -30,8 +31,12 @@ function refresh() {
       
       <button type="button" v-else @click="ServiceConnect.disconnect">Disconnect</button>
       
-      <button type="button">Save</button>
-      <button type="button" @click="refresh">Refresh</button>
+      <!-- <button type="button">Save</button>
+      <button type="button" @click="refresh">Refresh</button> -->
+
+      <button type="button" @click="HistoryManager.redo">Redo</button>
+      <button type="button" @click="HistoryManager.undo" >Undo</button>
+
     </div>
   </div>
 </template>

@@ -3,6 +3,7 @@ import Options from './components/options.vue'
 import Warper from './components/warper.vue'
 import Control from './components/control.vue'
 import Market from './components/market.vue'
+import Logger from './components/logger.vue'
 </script>
 
 <template>
@@ -13,6 +14,9 @@ import Market from './components/market.vue'
     <Market/>
     <Warper class="warper"/>
     <Control/>
+  </div>
+  <div class="footer">
+    <Logger></Logger>
   </div>
 </template>
 
@@ -36,5 +40,9 @@ import Market from './components/market.vue'
         flex: 1;
         min-width: 800px;
     }
+}
+
+.footer {
+    border-top: 2px solid #f8f1e0;
 }
 </style>

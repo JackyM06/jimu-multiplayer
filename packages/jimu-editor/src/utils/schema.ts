@@ -1,5 +1,8 @@
 export function styleHelper(props: Record<string, any>) {
 
+    if(!props) {
+      return {}; 
+    }
     const styles = Object.keys(props).reduce((res, cur) => {
         if(cur.startsWith('styles')) {
             res[cur.replace('styles.default.', '')] = props[cur].value.value ||  props[cur].value.default;

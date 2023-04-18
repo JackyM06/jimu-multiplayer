@@ -70,6 +70,7 @@ export class Voice {
         this.peer.on('call', (call) => {
             call.answer(this.stream);
             call.on('stream', function(remoteStream) {
+
               const audio = new Audio()
               audio.srcObject = remoteStream;
               audio.play();

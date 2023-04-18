@@ -28,12 +28,12 @@ export class SchemaModel {
         return SchemaModel.manger.value.get(eid)
     }
 
-    public static getModelProp(eid: string, path: string) {
+    public static getModelProp<T>(eid: string, path: string) {
         const model = this.getModel(eid);
         if(!model) {
             return;
         }
-        return get((model?.props as any)[path], 'value.value')
+        return get((model?.props as any)[path], 'value.value') as T;
     }
 
     public static setModelProp(eid: string, path: string, value: any) {
@@ -50,6 +50,14 @@ export class SchemaModel {
     public static getModelManifest(eid: string) {
         const model = this.getModel(eid);
         return model?.manifest
+    }
+
+    public static toSchema() {
+        return Array.from(this.manger.value.values())
+    }
+
+    public static toSchemaJson() {
+        return JSON.stringify(this.toSchema())
     }
 }
 
