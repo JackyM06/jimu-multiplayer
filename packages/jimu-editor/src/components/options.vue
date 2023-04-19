@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref } from 'vue'
-import { ServiceConnect } from '@multiplayer/jimu-editor/src/models/service'
+import { ServiceConnect, ServiceAction } from '@multiplayer/jimu-editor/src/models/service'
 import { Voice } from '@multiplayer/jimu-editor/src/models/voice'
 import { HistoryManager } from '@editor/models/history';
 
@@ -22,6 +22,9 @@ function refresh() {
     </div>
 
     <div>
+      <button type="button" @click="HistoryManager.redo">Redo</button>
+      <button type="button" @click="HistoryManager.undo" >Undo</button>
+
       <template v-if="ServiceConnect.connected">
         <button class="connect" type="button" v-if="Voice.opened" @click="Voice.close">Voice: ON</button>
         <button type="button"  v-else @click="Voice.open">Voice: OFF</button>
@@ -30,13 +33,11 @@ function refresh() {
       <button class="connect" type="button" v-if="!ServiceConnect.connected" @click="ServiceConnect.connect">Connect</button>
       
       <button type="button" v-else @click="ServiceConnect.disconnect">Disconnect</button>
-      
-      <!-- <button type="button">Save</button>
-      <button type="button" @click="refresh">Refresh</button> -->
 
-      <button type="button" @click="HistoryManager.redo">Redo</button>
-      <button type="button" @click="HistoryManager.undo" >Undo</button>
 
+
+      <button type="button" @click="ServiceAction.saveSchema" >Save</button>
+      <!-- <button type="button" @click="refresh">Refresh</button> -->
     </div>
   </div>
 </template>

@@ -7,7 +7,7 @@ export class SchemaModel {
     
     public static manger = ref(new Map<string, ISchemaItem>())
 
-    public static loadSchema(schema = mockSchema) {
+    public static loadSchema(schema: typeof mockSchema) {
         schema.forEach(this.addModel);
     }
 
@@ -61,4 +61,4 @@ export class SchemaModel {
     }
 }
 
-SchemaModel.loadSchema();
+// SchemaModel.loadSchema();
