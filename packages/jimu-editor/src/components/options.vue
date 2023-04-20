@@ -3,13 +3,21 @@ import { computed, onUnmounted, ref } from 'vue'
 import { ServiceConnect, ServiceAction } from '@multiplayer/jimu-editor/src/models/service'
 import { Voice } from '@multiplayer/jimu-editor/src/models/voice'
 import { HistoryManager } from '@editor/models/history';
+import EditDialog from '@editor/components/edit-dialog.vue'
+import { IUserInfo } from '@multiplayer/jimu-signaling-server/src/events/types';
 
 onUnmounted(() => {
   ServiceConnect.disconnect()
 })
 
-function refresh() {
-  location.reload()
+const editDialog = ref<InstanceType<typeof EditDialog>>()
+
+async function connect() {
+  const master = await ServiceAction.preconnect() as IUserInfo
+  if(master.uuid) {
+    return editDialog.value?.open(master.uuid);
+  }
+  ServiceConnect.connect();
 }
 
 </script>
@@ -30,16 +38,18 @@ function refresh() {
         <button type="button"  v-else @click="Voice.open">Voice: OFF</button>
       </template>
       
-      <button class="connect" type="button" v-if="!ServiceConnect.connected" @click="ServiceConnect.connect">Connect</button>
+      <button class="connect" type="button" v-if="!ServiceConnect.connected" @click="connect">Connect</button>
       
-      <button type="button" v-else @click="ServiceConnect.disconnect">Disconnect</button>
+      <button type="button" v-if="ServiceConnect.connected" @click="ServiceConnect.disconnect">Disconnect</button>
 
 
 
       <button type="button" @click="ServiceAction.saveSchema" >Save</button>
-      <!-- <button type="button" @click="refresh">Refresh</button> -->
     </div>
+
+
   </div>
+  <EditDialog ref="editDialog"></EditDialog>
 </template>
 
 <style lang="less" scoped>

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PageService } from './page.service';
 
-@Controller('rest/page')
+@Controller('page')
 export class PageController {
   constructor(private readonly pageService: PageService) {}
 

@@ -76,7 +76,7 @@ export class ServiceSocket {
         this.socket.emit(event, data)
     }
 
-    public addEventListener(event: ServerEmitType, listener: (event: any) => void) {
+    public addEventListener(event: ServerEmitType, listener: (event: any, ack: any) => void) {
         this.socket.on(event, listener)
     }
 }

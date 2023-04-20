@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { ServiceSocket } from './socket'
-import { ServerEmitType } from '@multiplayer/jimu-signaling-server/src/config/events'
+import { ServerEmitType, ServerSubscriptionType } from '@multiplayer/jimu-signaling-server/src/config/events'
 import { IUserInfo, IUserOverview } from '@multiplayer/jimu-signaling-server/src/events/types'
 import { MultiPlayerCore } from '@editor/models/crdt'
 export class ServiceConnect {
@@ -8,7 +8,7 @@ export class ServiceConnect {
     private static userinfo_ref = ref<Partial<{
         username: string,
         userTotals: number,
-        onlineUsers: string[],
+        onlineUsers: IUserInfo[],
     }>>({});
 
     public static socket = new ServiceSocket();
@@ -69,8 +69,20 @@ ServiceConnect.socket.addEventListener(ServerEmitType.JOINED, (data: IUserInfo) 
 })
 
 ServiceConnect.socket.addEventListener(ServerEmitType.USER_REFRESH, (data: IUserOverview) => {
-    const { total, uuids } = data;
+    const { total, users } = data;
     ServiceConnect.userTotals = total;
-    ServiceConnect.onlineUsers = uuids;
+    ServiceConnect.onlineUsers = users;
+    MultiPlayerCore.selectedElement()
+})
+
+ServiceConnect.socket.addEventListener(ServerEmitType.RELAY_HELPER_OFFER, (data: IUserInfo, ack) => {
+    const success = false;
+    ack(success);
+})
+
+ServiceConnect.socket.addEventListener(ServerEmitType.USER_REFRESH, (data: IUserOverview) => {
+    const { total, users } = data;
+    ServiceConnect.userTotals = total;
+    ServiceConnect.onlineUsers = users;
     MultiPlayerCore.selectedElement()
 })

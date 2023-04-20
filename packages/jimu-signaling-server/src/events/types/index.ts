@@ -1,12 +1,13 @@
-import { ElementOperationType } from 'src/config/events';
+import { ElementOperationType, UserType } from 'src/config/events';
 
 export interface IUserOverview {
   total: number;
-  uuids: string[];
+  users: IUserInfo[];
 }
 
 export interface IUserInfo {
   uuid: string;
+  type: UserType;
 }
 
 export interface IOperationInfo {

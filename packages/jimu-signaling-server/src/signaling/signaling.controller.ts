@@ -1,20 +1,10 @@
 import { Controller, Get, Query, Redirect, Req } from '@nestjs/common';
+import { Store } from 'src/store';
 
 @Controller('signaling')
 export class SignalingController {
-  @Get('check-health')
-  checkHealth(@Query('uid') uid: string, @Query('version') version: string) {
-    return uid + version;
-  }
-
-  @Get('check-version')
-  @Redirect('https://docs.nestjs.com', 302)
-  versionCheck(@Query('version') version: string) {
-    if (version && version === '5') {
-      return {
-        url: 'https://baidu.com',
-        statusCode: 302,
-      };
-    }
+  @Get('preconnect')
+  preconnect() {
+    return Store.masterClient ? Store.getUserInfo(Store.masterClient) : {};
   }
 }

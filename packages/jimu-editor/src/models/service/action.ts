@@ -2,10 +2,11 @@ import { SchemaModel } from "../schema";
 
 enum NET {
     PORT = 3000,
-    BASE = '/rest'
+    BASE = ''
 }
 
-const BASE_URL = `${location.protocol}//${location.hostname}:${NET.PORT}${NET.BASE}`;
+// const BASE_URL = `${location.protocol}//${location.hostname}:${NET.PORT}${NET.BASE}`;
+const BASE_URL = `${NET.BASE}`;
 
 export class ServiceAction {
 
@@ -45,6 +46,10 @@ export class ServiceAction {
 
     public static async  saveSchema() {
         return this.patch(`/page/${1}`, SchemaModel.toSchemaJson())
+    }
+
+    public static async preconnect() {
+        return this.get('/signaling/preconnect')
     }
 }
 

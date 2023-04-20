@@ -8,6 +8,9 @@ export enum ServerEmitType {
   PLAYER_UNJOINED = 'PLAYER_UNJOINED',
   OFFER = 'OFFER',
   ANSWER = 'ANSWER',
+
+  RELAY_HELPER_OFFER = 'RELAY_HELPER_OFF',
+  RELAY_MASTER_ANSWER = 'RELAY_MASTER_ANSWER',
 }
 
 export enum ServerSubscriptionType {
@@ -17,21 +20,19 @@ export enum ServerSubscriptionType {
   // Multiplayer
   SET_ACTIVE_EID = 'SET_ACTIVE_EID',
   SET_ELEMENT_OPERATION = 'SET_ELEMENT_OPERATION',
-}
 
-export const a = {
-  'styles.default.width': {
-    type: 'Number',
-    default: 300,
-    value: {
-      type: 'STATIC',
-      value: 300,
-    },
-  },
-};
+  SEND_HELPER_OFFER = 'SEND_HELPER_OFFER',
+  SEND_MASTER_ANSWER = 'SEND_MASTER_ANSWER',
+}
 
 export enum ElementOperationType {
   EDIT = 'EDIT',
   CREATE = 'CREATE',
   DELETE = 'DELETE',
+}
+
+export enum UserType {
+  MASTER = 'MASTER',
+  HELPER = 'HELPER',
+  VIEWER = 'VIEWER',
 }

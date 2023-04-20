@@ -35,7 +35,7 @@ export class Voice {
     private static mediaConnects: Record<string, MediaConnection> = {};
 
     private static get otherIDs() {
-        return ServiceConnect.onlineUsers.filter(e => e !== ServiceConnect.username);
+        return ServiceConnect.onlineUsers.filter(e => e.uuid !== ServiceConnect.username).map(e => e.uuid);
     }
 
     public static open() {
