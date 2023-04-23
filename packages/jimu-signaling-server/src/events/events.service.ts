@@ -62,9 +62,6 @@ export class EventsService {
   joined(client: Socket) {
     const userInfo = { uuid: getUuid(), type: this.getUserType() };
     this.sendHelperOffer(client, userInfo);
-    this.setUserInfo(client, { uuid: getUuid(), type: this.getUserType() });
-    Store.clientSockets[client.id] = client;
-    client.emit(ServerEmitType.JOINED, this.getUserInfo(client));
   }
 
   unjoined(client: Socket) {
@@ -107,9 +104,21 @@ export class EventsService {
         userInfo,
         (pass: boolean) => {
           client.emit(ServerEmitType.RELAY_MASTER_ANSWER, pass);
+
+          if (pass) {
+            this.setUserInfo(client, {
+              uuid: getUuid(),
+              type: this.getUserType(),
+            });
+            Store.clientSockets[client.id] = client;
+            client.emit(ServerEmitType.JOINED, this.getUserInfo(client));
+          }
         },
       );
       return;
     }
+    this.setUserInfo(client, { uuid: getUuid(), type: this.getUserType() });
+    Store.clientSockets[client.id] = client;
+    client.emit(ServerEmitType.JOINED, this.getUserInfo(client));
   }
 }

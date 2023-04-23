@@ -11,6 +11,7 @@
   "dependencies": {
     "@multiplayer/jimu-editor": "link:",
     "@multiplayer/jimu-signaling-server": "*",
+    "element-plus": "^2.3.3",
     "lodash": "4",
     "lodash-es": "^4.17.21",
     "peerjs": "^1.4.7",

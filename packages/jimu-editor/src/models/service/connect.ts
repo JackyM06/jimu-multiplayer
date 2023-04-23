@@ -3,6 +3,8 @@ import { ServiceSocket } from './socket'
 import { ServerEmitType, ServerSubscriptionType } from '@multiplayer/jimu-signaling-server/src/config/events'
 import { IUserInfo, IUserOverview } from '@multiplayer/jimu-signaling-server/src/events/types'
 import { MultiPlayerCore } from '@editor/models/crdt'
+
+import { ElMessage, ElMessageBox } from 'element-plus'
 export class ServiceConnect {
     private static connected_ref = ref(false);
     private static userinfo_ref = ref<Partial<{
@@ -75,14 +77,24 @@ ServiceConnect.socket.addEventListener(ServerEmitType.USER_REFRESH, (data: IUser
     MultiPlayerCore.selectedElement()
 })
 
-ServiceConnect.socket.addEventListener(ServerEmitType.RELAY_HELPER_OFFER, (data: IUserInfo, ack) => {
-    const success = false;
-    ack(success);
+ServiceConnect.socket.addEventListener(ServerEmitType.RELAY_HELPER_OFFER, async (data: IUserInfo, ack) => {
+    try {
+        await ElMessageBox.confirm(`用户${data.uuid}申请一起编辑，是否同意?`, {
+            confirmButtonText: '同意',
+            cancelButtonText: '拒绝',
+            type: 'warning',
+        }) 
+        ack(true);
+    } catch(e) {
+        ack(false)
+    }
 })
 
-ServiceConnect.socket.addEventListener(ServerEmitType.USER_REFRESH, (data: IUserOverview) => {
-    const { total, users } = data;
-    ServiceConnect.userTotals = total;
-    ServiceConnect.onlineUsers = users;
-    MultiPlayerCore.selectedElement()
+ServiceConnect.socket.addEventListener(ServerEmitType.RELAY_MASTER_ANSWER, async (pass: boolean) => {
+    if(pass) {
+        ElMessage.success('加入协同编辑成功')
+    } else {
+        ElMessage.error('加入协同编辑失败')
+
+    }
 })
