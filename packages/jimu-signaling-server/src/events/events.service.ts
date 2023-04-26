@@ -93,8 +93,14 @@ export class EventsService {
     );
   }
 
-  setElementOperation(client: Socket, operations: IElementUnionOperation[]) {
+  setElementOperation(
+    client: Socket,
+    operations: IElementUnionOperation[],
+    record = true,
+  ) {
     client.broadcast.emit(ServerEmitType.ELEMENT_OPERATION_UPDATE, operations);
+
+    record && Store.pushOperation(operations);
   }
 
   sendHelperOffer(client: Socket, userInfo: IUserInfo) {
@@ -104,21 +110,19 @@ export class EventsService {
         userInfo,
         (pass: boolean) => {
           client.emit(ServerEmitType.RELAY_MASTER_ANSWER, pass);
-
-          if (pass) {
-            this.setUserInfo(client, {
-              uuid: getUuid(),
-              type: this.getUserType(),
-            });
-            Store.clientSockets[client.id] = client;
-            client.emit(ServerEmitType.JOINED, this.getUserInfo(client));
-          }
+          pass && this.realJoined(client);
         },
       );
       return;
     }
+    this.realJoined(client);
+  }
+
+  realJoined(client: Socket) {
     this.setUserInfo(client, { uuid: getUuid(), type: this.getUserType() });
     Store.clientSockets[client.id] = client;
     client.emit(ServerEmitType.JOINED, this.getUserInfo(client));
+
+    this.setElementOperation(client, Store.elementOperationQueue, false);
   }
 }

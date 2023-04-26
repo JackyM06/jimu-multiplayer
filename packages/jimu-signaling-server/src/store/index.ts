@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { Socket } from 'socket.io';
 import { UserType } from 'src/config/events';
-import { IPlayerInfo } from 'src/events/types';
+import { IElementUnionOperation, IPlayerInfo } from 'src/events/types';
 
 export class Store {
   public static playerInfo: Record<string, IPlayerInfo> = {};
@@ -21,5 +21,11 @@ export class Store {
 
   public static getUserInfo(client: Socket) {
     return get(Store.playerInfo[client.id], 'userInfo');
+  }
+
+  public static elementOperationQueue: Array<IElementUnionOperation> = [];
+
+  public static pushOperation(op: IElementUnionOperation[]) {
+    this.elementOperationQueue.push(...op);
   }
 }
